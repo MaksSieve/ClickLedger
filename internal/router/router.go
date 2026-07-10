@@ -16,7 +16,15 @@ func CreateMainRouter(db *gorm.DB) *http.ServeMux {
 	router.HandleFunc("GET /health", middleware.DefaultChain(telemetryHandler.Health()))
 
 	router.Handle("/api/", createLinkRouter(db))
+	router.Handle("/", createSlugRouter(db))
 
+	return router
+}
+
+func createSlugRouter(db *gorm.DB) *http.ServeMux {
+	router := http.NewServeMux()
+	slugHandler := handler.CreateSlugHandler(db)
+	router.HandleFunc("/{slug}", middleware.DefaultChain(slugHandler.RedirectToSlug()))
 	return router
 }
 

@@ -35,6 +35,15 @@ func (r *LinkRepository) GetLinkByID(id uint) (*model.Link, error) {
 	return &link, nil
 }
 
+func (r *LinkRepository) GetLinkBySlug(slug string) (*model.Link, error) {
+	var link model.Link
+	result := r.db.Where("slug = ?", slug).Select("id", "target", "slug").First(&link)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &link, nil
+}
+
 func (r *LinkRepository) CreateLink(link *model.Link) (*model.Link, error) {
 	result := r.db.Create(link)
 	if result.Error != nil {

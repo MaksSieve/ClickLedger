@@ -37,7 +37,6 @@ func (h *LinkHandler) GetLinkById() http.HandlerFunc {
 				json.NewEncoder(w).Encode(link)
 			}
 		}
-
 	}
 }
 

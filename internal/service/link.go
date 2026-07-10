@@ -27,6 +27,14 @@ func (s *LinkService) GetLink(id uint) (*model.Link, error) {
 	return s.repo.GetLinkByID(id)
 }
 
+func (s *LinkService) GetTargetBySlug(slug string) (string, error) {
+	link, err := s.repo.GetLinkBySlug(slug)
+	if err != nil {
+		return "", err
+	}
+	return link.Target, nil
+}
+
 func (s *LinkService) CreateLink(data *LinkCreationRequest) (*model.Link, error) {
 	var encodedLink = encoding.EncodeToBase62([]byte(data.Target))
 	link, err := s.repo.CreateLink(&model.Link{
