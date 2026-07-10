@@ -1,0 +1,12 @@
+services:
+  postgres:
+    image: postgres:15.3
+    container_name: clickledger-postgres
+    environment:
+      POSTGRES_USER: clickledger
+      POSTGRES_PASSWORD: clickledger
+      POSTGRES_DB: clickledger
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./temp/postgres_data:/var/lib/postgresql/data

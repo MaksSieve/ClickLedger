@@ -2,23 +2,28 @@ package router
 
 import (
 	"clickledger/internal/handler"
-	"log"
+	"clickledger/internal/middleware"
 	"net/http"
+
+	"gorm.io/gorm"
 )
 
-type Route struct {
-	Path    string
-	Handler http.HandlerFunc
+func CreateMainRouter(db *gorm.DB) *http.ServeMux {
+	router := http.NewServeMux()
+
+	telemetryHandler := handler.CreateTelemetryhandler()
+
+	router.HandleFunc("GET /health", middleware.DefaultChain(telemetryHandler.Health()))
+
+	router.Handle("/api/", createLinkRouter(db))
+
+	return router
 }
 
-var router = []Route{
-	{Path: "/health", Handler: handler.HealthHandler},
-}
-
-func API(port string) {
-	for _, route := range router {
-		http.HandleFunc(route.Path, route.Handler)
-	}
-
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+func createLinkRouter(db *gorm.DB) *http.ServeMux {
+	router := http.NewServeMux()
+	linkHandler := handler.CreateLinkHandler(db)
+	router.HandleFunc("GET /api/link/{id}", middleware.DefaultChain(linkHandler.GetLinkById()))
+	router.HandleFunc("POST /api/link/shorten", middleware.DefaultChain(linkHandler.CreateLink()))
+	return router
 }
