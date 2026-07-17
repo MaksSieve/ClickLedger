@@ -16,5 +16,5 @@ func Chain(middleware ...Middleware) http.Handler {
 }
 
 func DefaultChain(next http.Handler) http.HandlerFunc {
-	return ErrorHandler(Log(next)).ServeHTTP
+	return CorsMiddleware(ErrorHandler(Log(next))).ServeHTTP
 }

@@ -27,12 +27,24 @@ func (s *LinkService) GetLink(id uint) (*model.Link, error) {
 	return s.repo.GetLinkByID(id)
 }
 
+func (s *LinkService) GetLinks() ([]model.Link, error) {
+	return s.repo.GetLinks()
+}
+
 func (s *LinkService) GetTargetBySlug(slug string) (string, error) {
 	link, err := s.repo.GetLinkBySlug(slug)
 	if err != nil {
 		return "", err
 	}
 	return link.Target, nil
+}
+
+func (s *LinkService) GetLinkBySlug(slug string) (*model.Link, error) {
+	link, err := s.repo.GetLinkBySlug(slug)
+	if err != nil {
+		return nil, err
+	}
+	return link, nil
 }
 
 func (s *LinkService) CreateLink(data *LinkCreationRequest) (*model.Link, error) {

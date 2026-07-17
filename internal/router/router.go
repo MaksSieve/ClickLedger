@@ -31,7 +31,10 @@ func createSlugRouter(db *gorm.DB) *http.ServeMux {
 func createLinkRouter(db *gorm.DB) *http.ServeMux {
 	router := http.NewServeMux()
 	linkHandler := handler.CreateLinkHandler(db)
+	clickHandler := handler.CreateClickHandler(db)
+	router.HandleFunc("GET /api/link", middleware.DefaultChain(linkHandler.GetLinks()))
 	router.HandleFunc("GET /api/link/{id}", middleware.DefaultChain(linkHandler.GetLinkById()))
 	router.HandleFunc("POST /api/link/shorten", middleware.DefaultChain(linkHandler.CreateLink()))
+	router.HandleFunc("GET /api/link/{linkId}/clicks", middleware.DefaultChain(clickHandler.GetLinkClicks()))
 	return router
 }

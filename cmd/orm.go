@@ -23,18 +23,20 @@ func CreateOrmCommand(db *gorm.DB) *cli.Command {
 					},
 				},
 				Action: func(ctx context.Context, command *cli.Command) error {
+					var repo repository.Repository
 					switch command.StringArg("entity") {
 					case "link":
-						// Call the migration function for the Link entity
-
-						repo := repository.CreateLinkRepo(db)
-
-						err := repo.MigrateLink()
-						if err != nil {
-							return err
-						}
+						repo = repository.CreateLinkRepo(db)
+					case "click":
+						repo = repository.CreateClickRepo(db)
 					default:
 						return cli.Exit("Unknown entity: "+command.StringArg("entity"), 1)
+					}
+
+					err := repo.Migrate()
+
+					if err != nil {
+						return err
 					}
 					return nil
 				},

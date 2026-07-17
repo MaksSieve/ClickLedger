@@ -2,18 +2,21 @@ package handler
 
 import (
 	"clickledger/internal/service"
+	"clickledger/internal/utm"
 	"net/http"
 
 	"gorm.io/gorm"
 )
 
 type SlugHandler struct {
-	service *service.LinkService
+	linkService  *service.LinkService
+	clickService *service.ClickService
 }
 
 func CreateSlugHandler(db *gorm.DB) *SlugHandler {
 	return &SlugHandler{
-		service: service.CreateLinkService(db),
+		linkService:  service.CreateLinkService(db),
+		clickService: service.CreateClickService(db),
 	}
 }
 
@@ -26,18 +29,27 @@ func (h *SlugHandler) RedirectToSlug() http.HandlerFunc {
 			return
 		}
 
-		target, err := h.service.GetTargetBySlug(slug)
+		utmData := utm.DecodeUtm(r)
+
+		link, err := h.linkService.GetLinkBySlug(slug)
 
 		if err != nil {
-			if err.Error() == "record not found" {
-				http.Error(w, "Not found", 404)
-				return
-			}
-			http.Error(w, err.Error(), 500)
 			return
 		}
 
-		http.Redirect(w, r, target, 302)
+		http.Redirect(w, r, link.Target, 302)
+
+		_, err = h.clickService.AddNewClick(
+			link,
+			utmData,
+			r.RemoteAddr,
+			r.UserAgent(),
+			r.Referer(),
+		)
+
+		if err != nil {
+			panic(err.Error())
+		}
 
 	}
 }

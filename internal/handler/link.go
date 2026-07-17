@@ -40,6 +40,20 @@ func (h *LinkHandler) GetLinkById() http.HandlerFunc {
 	}
 }
 
+func (h *LinkHandler) GetLinks() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		link, err := h.service.GetLinks()
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(link)
+		}
+
+	}
+}
+
 func (h *LinkHandler) CreateLink() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Body == nil {
