@@ -1,0 +1,23 @@
+{
+  "name": "front",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@heroicons/vue": "^2.2.0",
+    "@sidekickicons/vue": "^0.15.0",
+    "@tailwindcss/vite": "^4.3.2",
+    "@vueuse/core": "^14.3.0",
+    "nuxt": "^4.4.8",
+    "tailwindcss": "^4.3.2"
+  },
+  "devDependencies": {
+    "lightningcss": "^1.32.0"
+  }
+}
