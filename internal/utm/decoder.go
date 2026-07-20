@@ -18,19 +18,14 @@ func DecodeUtm(r *http.Request) *UtmData {
 		switch key {
 		case "utm_source":
 			utmData.Source = value[0]
-			break
 		case "utm_medium":
 			utmData.Medium = value[0]
-			break
 		case "utm_campaign":
 			utmData.Campaign = value[0]
-			break
 		case "utm_Conetnt":
 			utmData.Content = value[0]
-			break
 		case "utm_term":
 			utmData.Term = value[0]
-			break
 		}
 	}
 

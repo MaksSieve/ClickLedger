@@ -2,22 +2,31 @@ package service
 
 import (
 	"clickledger/internal/repository"
+	"errors"
 
 	"gorm.io/gorm"
 )
 
 type AnalyticsService struct {
-	repo *repository.LinkAnalyticsRepository
+	analyticsRepo *repository.LinkAnalyticsRepository
+	linkRepo      *repository.LinkRepository
 }
 
 func CreateAnalyticsService(db *gorm.DB) *AnalyticsService {
 	return &AnalyticsService{
-		repo: repository.CreateLinkAnalyticsRepo(db),
+		analyticsRepo: repository.CreateLinkAnalyticsRepo(db),
+		linkRepo:      repository.CreateLinkRepo(db),
 	}
 }
 
 func (s *AnalyticsService) GetTopReferers(linkID uint, top int) ([]repository.TopReferer, error) {
-	data, err := s.repo.GetTopReferers(linkID, top)
+	_, err := s.linkRepo.GetLinkByID(linkID)
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, ErrLinkNotFound
+	}
+
+	data, err := s.analyticsRepo.GetTopReferers(linkID, top)
 
 	if err != nil {
 		return nil, err

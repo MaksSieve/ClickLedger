@@ -27,10 +27,10 @@ func (r *LinkAnalyticsRepository) GetTopReferers(linkID uint, top int) ([]TopRef
 
 	err := gorm.G[model.Click](r.db).Table("clicks").
 		Select("count(referer) as count, referer").
-		Where("link_id = ?", 1).
+		Where("link_id = ?", linkID).
 		Group("referer").
 		Order("count DESC").
-		Limit(2).
+		Limit(top).
 		Scan(context.Background(), &results)
 
 	if err != nil {
