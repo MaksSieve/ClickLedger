@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"clickledger/internal/repository"
 	"clickledger/internal/service"
 	"encoding/json"
 	"log"
@@ -12,12 +13,18 @@ import (
 )
 
 type LinkHandler struct {
-	service *service.LinkService
+	service          *service.LinkService
+	analyticsService *service.AnalyticsService
+}
+
+type LinkAnalyticsResponse struct {
+	TopReferers []repository.TopReferer `json:"topReferers"`
 }
 
 func CreateLinkHandler(db *gorm.DB) *LinkHandler {
 	return &LinkHandler{
-		service: service.CreateLinkService(db),
+		service:          service.CreateLinkService(db),
+		analyticsService: service.CreateAnalyticsService(db),
 	}
 }
 
@@ -88,5 +95,42 @@ func (h *LinkHandler) CreateLink() http.HandlerFunc {
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(link)
 		}
+	}
+}
+
+func (h *LinkHandler) GetLinkAnalytics() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.ParseUint(r.PathValue("id"), 10, 32)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+		var topReferersNumber int64
+		topReferersNumberParam := r.URL.Query()["topReferersNumber"]
+
+		if len(topReferersNumberParam) == 0 || len(topReferersNumberParam) > 1 {
+			topReferersNumber = 5
+		} else {
+			topReferersNumber, err = strconv.ParseInt(topReferersNumberParam[0], 10, 32)
+			if err != nil {
+				http.Error(w, err.Error(), 400)
+				return
+			}
+		}
+
+		topReferers, err := h.analyticsService.GetTopReferers(uint(id), int(topReferersNumber))
+
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+
+		response := &LinkAnalyticsResponse{
+			TopReferers: topReferers,
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+
 	}
 }
