@@ -4,7 +4,6 @@ import (
 	"clickledger/internal/repository"
 	"clickledger/internal/service"
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -32,12 +31,12 @@ func (h *LinkHandler) GetLinkById() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseUint(r.PathValue("id"), 10, 32)
 		if err != nil {
-			http.Error(w, err.Error(), 400)
+			HandleError(w, NewErrRequestParameterInvalid("id", "int", err.Error()))
 			return
 		} else {
 			link, err := h.service.GetLink(uint(id))
 			if err != nil {
-				http.Error(w, err.Error(), 400)
+				HandleError(w, err)
 				return
 			} else {
 				w.Header().Set("Content-Type", "application/json")
@@ -51,7 +50,7 @@ func (h *LinkHandler) GetLinks() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		link, err := h.service.GetLinks()
 		if err != nil {
-			http.Error(w, err.Error(), 400)
+			HandleError(w, err)
 			return
 		} else {
 			w.Header().Set("Content-Type", "application/json")
@@ -64,7 +63,7 @@ func (h *LinkHandler) GetLinks() http.HandlerFunc {
 func (h *LinkHandler) CreateLink() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Body == nil {
-			http.Error(w, "Empty body", 400)
+			HandleError(w, NewErrRequestParameterInvalid("Body", "not empty", ""))
 		}
 
 		defer r.Body.Close()
@@ -76,7 +75,6 @@ func (h *LinkHandler) CreateLink() http.HandlerFunc {
 		err := json.NewDecoder(r.Body).Decode(reqData)
 
 		if err != nil {
-			log.Println("error:", err)
 			http.Error(w, err.Error(), 400)
 			return
 		}
