@@ -1,6 +1,5 @@
 <template>
-	<div class="p-2">
-		<Table title="Links" class="h-full" :loading="loading">
+	<Table title="Links" class="h-full" :loading="loading">
 		<template #header>
 			<HeaderCell>ID</HeaderCell>
 			<HeaderCell>Name</HeaderCell>
@@ -21,8 +20,7 @@
 				</TableTextCell>
 			</tr>
 		</template>
-		</Table>
-  	</div>
+	</Table>
 </template>
 
 <script setup lang="ts">
