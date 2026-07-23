@@ -1,9 +1,8 @@
 <template>
-	<main class="h-svh w-full flex flex-col">
-		<LayoutPageHeader class="w-full md:h-20 gap-4"/>
-		<div class="w-full h-full px-16 py-4">
-			<slot/>	
-		</div>
-		<LayoutPageFooter class="w-full md:h-20 justify-self-end" />
-	</main>
+	<div class="min-h-svh bg-background text-foreground">
+		<LayoutPageHeader />
+		<main class="mx-auto min-h-[calc(100svh-4.25rem)] max-w-[1440px] px-4 py-6 sm:px-6 lg:pl-72 lg:pr-8 lg:py-8">
+			<slot />
+		</main>
+	</div>
 </template>
