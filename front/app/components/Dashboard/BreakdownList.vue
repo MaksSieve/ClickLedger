@@ -11,7 +11,7 @@
 					<span class="w-9 text-right text-xs text-muted-foreground">{{ percentage(item.value) }}%</span>
 				</div>
 			</div>
-			<div class="ml-[18px] h-1.5 overflow-hidden rounded-full bg-muted">
+			<div class="ml-4.5 h-1.5 overflow-hidden rounded-full bg-muted">
 				<div
 					class="h-full rounded-full"
 					:style="{ width: `${percentage(item.value)}%`, backgroundColor: item.color ?? 'var(--color-primary)' }"

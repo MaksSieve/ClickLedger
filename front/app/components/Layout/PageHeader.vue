@@ -1,6 +1,6 @@
 <template>
 	<div class="contents">
-		<header class="sticky top-0 z-50 flex h-[4.25rem] items-center justify-between border-b border-border bg-background/90 px-4 backdrop-blur-xl sm:px-6 lg:hidden">
+		<header class="sticky top-0 z-50 flex h-17 items-center justify-between border-b border-border bg-background/90 px-4 backdrop-blur-xl sm:px-6 lg:hidden">
 			<NuxtLink to="/" aria-label="ClickLedger dashboard">
 				<img src="/logo-full.png" class="h-10 w-auto max-w-44 object-contain" alt="ClickLedger">
 			</NuxtLink>
@@ -18,7 +18,7 @@
 
 		<aside
 			class="fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border bg-card/95 p-4 backdrop-blur-xl transition-transform lg:translate-x-0"
-			:class="mobileOpen ? 'translate-x-0 top-[4.25rem]' : '-translate-x-full'"
+			:class="mobileOpen ? 'translate-x-0 top-17' : '-translate-x-full'"
 		>
 			<NuxtLink class="hidden h-16 items-center px-2 lg:flex" to="/">
 				<img src="/logo-full.png" class="h-12 w-auto object-contain" alt="ClickLedger">
@@ -56,7 +56,7 @@
 		<button
 			v-if="mobileOpen"
 			type="button"
-			class="fixed inset-0 top-[4.25rem] z-30 bg-foreground/20 backdrop-blur-sm lg:hidden"
+			class="fixed inset-0 top-17 z-30 bg-foreground/20 backdrop-blur-sm lg:hidden"
 			aria-label="Close navigation"
 			@click="mobileOpen = false"
 		/>
